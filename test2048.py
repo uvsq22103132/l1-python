@@ -71,9 +71,10 @@ def etat_du_jeu(matrice):
             generation_alea(matrice)
             jeu == True
             return 'ok'
-    jeu == False
-    return 'perdu'
-
+    if matrice[i][j] != 2048 and matrice[i][j] != 0 and matrice[i][j] != matrice[i+1][j] or matrice[i][j] != matrice[i][j+1] and matrice[3][j] != matrice[3][j+1] and matrice[i][3] != matrice[i+1][3]:
+        jeu == False
+    else : 
+        jeu == True
 
 def generation_alea(matrice):
     rand = random.randint(0,9)
@@ -125,7 +126,7 @@ def generation_de_text(matrice):
 
 
 def Left():
-    global matrice
+    global matrice, canvas
     for r in range(4):
         while 0 in matrice[r]:
             matrice[r].remove(0)
@@ -138,7 +139,7 @@ def Left():
                 matrice[r][c + 1] = 0
     etat_du_jeu(matrice)
     if jeu == False :
-        del matrice
+        canvas.delete(canvas)
     else :
         generation_alea(matrice)
         generation_de_text(matrice)
