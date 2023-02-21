@@ -2,6 +2,8 @@
 import tkinter as tk 
 import random
 
+from matplotlib.pyplot import text
+
 h = 1000
 l = 1000
 grille = 100
@@ -13,6 +15,7 @@ matrice = [[0, 0, 0, 0],
            [0, 0, 0, 0],
            [0, 0, 0, 0],
            [0, 0, 0, 0]]
+somme = 0
 
 
 def creer_matrice():
@@ -76,6 +79,7 @@ def etat_du_jeu(matrice):
     else : 
         jeu == True
 
+
 def generation_alea(matrice):
     rand = random.randint(0,9)
     if rand < 1:
@@ -95,8 +99,8 @@ def generation_alea(matrice):
 
 
 def generation_de_text(matrice):
-    for r in range(0, 3):
-        for c in range(0, 3):
+    for r in range(0, 4):
+        for c in range(0, 4):
             if matrice[r][c] == 0 :
                 canvas.create_text(centre + 200*int(r), centre + 200*int(c), anchor='center', text='')
             elif matrice[r][c] == 2 : 
@@ -127,6 +131,7 @@ def generation_de_text(matrice):
 
 def Left():
     global matrice, canvas
+    canvas.delete(generation_de_text)
     for r in range(4):
         while 0 in matrice[r]:
             matrice[r].remove(0)
@@ -138,17 +143,15 @@ def Left():
                 matrice[r][c] = 2 * matrice[r][c]
                 matrice[r][c + 1] = 0
     etat_du_jeu(matrice)
-    if jeu == False :
-        canvas.delete(canvas)
-    else :
-        generation_alea(matrice)
-        generation_de_text(matrice)
+    generation_de_text(matrice)
+    print(matrice)
         
 
 
 
 def Right():
-    global matrice
+    global matrice, canvas
+    canvas.delete(generation_de_text)
     for r in range(4):
         while 0 in matrice[r]:
             matrice[r].remove(0)
@@ -160,61 +163,56 @@ def Right():
                 matrice[r][c] = 2 * matrice[r][c]
                 matrice[r][c - 1] = 0
     etat_du_jeu(matrice)
-    if jeu == False :
-            del matrice
-    else :
-        generation_alea(matrice)
-        generation_de_text(matrice)
+    generation_de_text(matrice)
+    print(matrice)
 
 
 def Up():
-    global matrice
+    global matrice, canvas
     for c in range(4):
-        while 0 in matrice[c]:
-            matrice[c].remove(0)
-        while len(matrice[c]) !=4:
-            matrice[c].append(0)
+        for r in range(4):
+            while 0 in matrice[c]:
+                matrice[c].remove(0)
+            while len(matrice[c]) !=4:
+                matrice[c].insert(r, 0)
     for c in range(4):
         for r in range(3):
             if matrice[r][c] == matrice[r + 1][c] and matrice[r][c] != 0:
                 matrice[r][c] = 2 * matrice[r][c]
                 matrice[r + 1][c] = 0
     etat_du_jeu(matrice) 
-    if jeu == False :
-        del matrice
-    else :
-            generation_alea(matrice)
-            generation_de_text(matrice)
+    generation_de_text(matrice)
+    print(matrice)
 
 
 def Down():
-    global matrice
+    global matrice, canvas
     for c in range(4): 
-        while 0 in matrice[c]:
-            matrice[c].remove(0)
-        while len(matrice[c]) != 4:
-            matrice[c].insert(-1, 0)
+        for r in range(4):
+            while 0 in matrice[c]:
+                matrice[c].remove(0)
+            while len(matrice[c]) != 4:
+                matrice[c].insert(r, 0)
     for c in range(4):
         for r in range(3):
             if matrice[r][c] == matrice[r - 1][c] and matrice[r][c] != 0:
                 matrice[r][c] = 2 * matrice[r][c]
                 matrice[r - 1][c] = 0
     etat_du_jeu(matrice)
-    if jeu == False :
-        del matrice
-    else :
-        generation_alea(matrice)
-        generation_de_text(matrice)
+    generation_de_text(matrice)
+    print(matrice)
 
 
 def Exit():
+    global somme
     """La partie est finie et le score s'affiche"""
     #les boutons deviennent inactifsgrille
     #la somme de toutes les chiffres présents à ce moment est afficher
-    s = 0
-    for i in range(16):
-        s += int(input())
-    print("Le score est", s)
+    for r in range(0, 3):
+        for c in range(0, 3):
+            somme += matrice[r][c]
+    
+    print("Le score est", somme)
 
 
 def Save():
@@ -229,7 +227,6 @@ def Load():
 def create_grille():
     for i in range(0, 4):
         for j in range(0, 4):
-            cpt2=+1
             canvas.create_rectangle(grille + 200*i, grille + 200*j, grille + 200*(i+1), grille +200*(j+1))
             
 
